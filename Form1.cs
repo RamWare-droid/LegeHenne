@@ -44,6 +44,32 @@ namespace LegeHenne
             strOpen = Convert.ToString(erg, System.Globalization.CultureInfo.InvariantCulture) + "\t";
             return strOpen;
         }
+
+        private string createRampeForm(int hour, int minute)
+        {
+            // Hilfsroutine zur Erzeugung einer Rampe in Abhaengigkeit der Zeit.
+
+            double maxMinutes = 24 * 60; // Anzahl Minuten im 24 h Tag.
+            int minutes;
+            double erg, steigung;
+            float ergFloat;
+            string strOpen;
+
+            minutes = 60 * hour + minute;
+            steigung = 2 / maxMinutes;
+
+            erg = steigung * minutes - 1; // Schwankt zwischen -1 und +1
+
+            // Werte sollen schwanken zwischen 202 und 198, Amplitude == 2
+            erg *= 2;
+            erg += 200;
+            ergFloat = (float)erg;
+
+            //´strOpen = erg.ToString() + ".000\t"; // 3 Nachkommastellen und Tab.
+            strOpen = Convert.ToString(ergFloat, System.Globalization.CultureInfo.InvariantCulture) + "\t";
+            return strOpen;
+        }
+
         private void cmdReadFromFile_Click(object sender, EventArgs e)
         {
             string ueberschrift = "<DATE>\t<TIME>\t<OPEN>\t<HIGH>\t<LOW>\t<CLOSE>\t<TICKVOL>\t<VOL>\t<SPREAD>";
@@ -85,7 +111,8 @@ namespace LegeHenne
                         sb.Append(strSecond).Append('\t');
 
                         // strOpen = createPulseForm( hour, minute );
-                        strOpen = createCosForm(hour, minute);
+                        // strOpen = createCosForm(hour, minute);
+                        strOpen = createRampeForm(hour, minute);
 
                         for (int i = 0; i < 4; i++)
                             sb.Append(strOpen);
